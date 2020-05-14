@@ -1,0 +1,32 @@
+version: "3"
+services:
+
+  friends-management-img:
+    image: friends-management-img
+    ports:
+      - "8080:8080"
+    networks:
+      - friends-management-app
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:5.7
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+      - ./mysql-db/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+    networks:
+      - friends-management-app
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: friends-management
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+networks:
+  friends-management-app:
